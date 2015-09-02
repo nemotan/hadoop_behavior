@@ -12,6 +12,7 @@ import com.landray.behavior.util.DateUtil;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.hadoop.mapreduce.OutputFormat;
 
 /**
  * 
@@ -32,6 +33,10 @@ public class HotSpotWidgetJob extends AbstractHotSpotJob {
 
 	public Class getReducerClass() {
 		return WidgetReducer.class;
+	}
+
+	public Class<? extends OutputFormat> getOutputClass() {
+		return HotSpotWidgetOutputFormat.class;
 	}
 
 	public Class<?> getJarClass() {
@@ -93,10 +98,6 @@ public class HotSpotWidgetJob extends AbstractHotSpotJob {
 	}
 
 	public static class WidgetReducer extends HotSpotReduce {
-		public String getCollectionName() {
-			return JOB_NAME + "s";
-		}
-
 		protected void reduce(Text key, Iterable<Text> values, Context context)
 				throws IOException, InterruptedException {
 			int sum = 0;
@@ -108,7 +109,14 @@ public class HotSpotWidgetJob extends AbstractHotSpotJob {
 				time = Long.parseLong(valueJson.get("time").toString());
 				sum += count;
 			}
-			// 获取ID
+			JSONObject valueObject = new JSONObject();
+			valueObject.put("time",time);
+			valueObject.put("sum",sum);
+			context.write(key,new Text(valueObject.toString()));
+
+
+
+			/*// 获取ID
 			String id = key.toString().split(ID_CONN)[0];
 			// 获取key
 			String keyStr = key.toString().split(ID_CONN)[1];
@@ -133,7 +141,7 @@ public class HotSpotWidgetJob extends AbstractHotSpotJob {
 			widgetObject.put("value", valueObject);
 			hotspotResConnection.save(widgetObject);
 
-			/*
+			*//*
 			 * context.write((Text) key, new Text("{count:" +
 			 * String.valueOf(sum) + ",time:" + String.valueOf(time) + "}"));
 			 */

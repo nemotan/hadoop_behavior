@@ -15,8 +15,8 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class WordCount {
-	public static final String INPUT = "hdfs://192.168.5.146:9000/input/wordcount";
-	public static final String OUT_PUT = "hdfs://192.168.5.146:9000/output/wordcount";
+	public static final String INPUT = "hdfs://master:9000/input/wordcount";
+	public static final String OUT_PUT = "hdfs://master:9000/output/wordcount";
 	public static class TokenizerMapper extends
 			Mapper<Object, Text, Text, IntWritable> {
 

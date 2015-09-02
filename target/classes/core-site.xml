@@ -19,11 +19,11 @@
 <configuration>
  <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://192.168.5.146:9000</value>
+        <value>hdfs://master:9000</value>
  </property>
  <property>  
         <name>hadoop.tmp.dir</name>  
-        <value>/home/nemo/hadoop-2.6.0/tmp</value>  
-        <description>Abase for other temporary directories.</description>  
+        <value>/home/nemo/hadoop-2.6.0/tmp</value>
+        <description>Abase for other temporary directories.</description>
  </property> 
 </configuration>
