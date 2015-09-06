@@ -1,6 +1,6 @@
 package com.nemo.test;
 
-import com.landray.behavior.util.HDFSUtil;
+import com.landray.behavior.base.util.HDFSUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;

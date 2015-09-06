@@ -1,6 +1,7 @@
 package com.landray.behavior.job.hotspot;
 
-import com.landray.behavior.util.DateUtil;
+import com.landray.behavior.base.util.DateUtil;
+import com.landray.behavior.job.base.JobConst;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.hadoop.io.Text;
@@ -77,14 +78,14 @@ public class HotSpotPointJob extends AbstractHotSpotJob {
                     valueJson.put("endTime", time);
 
                     // id以标记不同project
-                    context.write(new Text(customerId + ID_CONN + keyJson.toString()), new Text(valueJson.toString()));
+                    context.write(new Text(customerId + JobConst.ID_CONN + keyJson.toString()), new Text(valueJson.toString()));
                     keyJson.put("user", "*");
-                    context.write(new Text(customerId + ID_CONN + keyJson.toString()), new Text(valueJson.toString()));
+                    context.write(new Text(customerId + JobConst.ID_CONN + keyJson.toString()), new Text(valueJson.toString()));
                     //计算page（此处把原来的point job和page job合二为一）,並且移除多餘的属性
                     keyJson.remove("key");
                     keyJson.remove("user");
                     valueJson.remove("count");
-                    context.write(new Text(customerId + ID_CONN + keyJson.toString()), new Text(valueJson.toString()));
+                    context.write(new Text(customerId + JobConst.ID_CONN + keyJson.toString()), new Text(valueJson.toString()));
                 }
 
             }
@@ -95,7 +96,7 @@ public class HotSpotPointJob extends AbstractHotSpotJob {
     public static class PointReducer extends HotSpotReduce {
         protected void reduce(Text key, Iterable<Text> values, Context context)
                 throws IOException, InterruptedException {
-            String keyStr = key.toString().split(ID_CONN)[1];
+            String keyStr = key.toString().split(JobConst.ID_CONN)[1];
             JSONObject keyJSON = JSONObject.fromObject(keyStr);
             if (keyJSON.containsKey("user")) {
                 //point

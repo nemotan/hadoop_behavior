@@ -1,7 +1,8 @@
 package com.landray.behavior.job.hotspot;
 
-import com.landray.behavior.db.DBNames;
-import com.landray.behavior.util.DBUtil;
+import com.landray.behavior.base.db.DBNames;
+import com.landray.behavior.job.base.JobConst;
+import com.landray.behavior.base.util.DBUtil;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -31,9 +32,9 @@ public class HotSpotWidgetOutputFormat<K, V> extends FileOutputFormat<K, V> {
             int sum = Integer.parseInt(vJSON.get("sum").toString());
             long time = Long.parseLong(vJSON.get("time").toString());
             // 获取ID
-            String id = key.toString().split(AbstractHotSpotJob.ID_CONN)[0];
+            String id = key.toString().split(JobConst.ID_CONN)[0];
             // 获取key
-            String keyStr = key.toString().split(AbstractHotSpotJob.ID_CONN)[1];
+            String keyStr = key.toString().split(JobConst.ID_CONN)[1];
             // 获取hotspot_res_id数据苦中的widgets集合
             DBCollection hotspotResConnection = DBUtil.getDBCollection(DBNames.COLLECTION_RES_HOTSPOT+ "_" +id, COLLECTION_NAME_WIDGET);
             // widget对象

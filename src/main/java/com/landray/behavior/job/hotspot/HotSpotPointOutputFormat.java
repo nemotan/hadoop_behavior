@@ -1,7 +1,8 @@
 package com.landray.behavior.job.hotspot;
 
-import com.landray.behavior.db.DBNames;
-import com.landray.behavior.util.DBUtil;
+import com.landray.behavior.base.db.DBNames;
+import com.landray.behavior.job.base.JobConst;
+import com.landray.behavior.base.util.DBUtil;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -28,7 +29,7 @@ public class HotSpotPointOutputFormat<K, V> extends FileOutputFormat<K, V> {
         }
 
         public synchronized void write(K key, V value) throws IOException {
-            String keyStr = key.toString().split(AbstractHotSpotJob.ID_CONN)[1];
+            String keyStr = key.toString().split(JobConst.ID_CONN)[1];
             JSONObject keyJSON = JSONObject.fromObject(keyStr);
             if (keyJSON.containsKey("user")) {
                 //point
@@ -48,9 +49,9 @@ public class HotSpotPointOutputFormat<K, V> extends FileOutputFormat<K, V> {
             long endTimeR = Long.parseLong(vJSON.get("endTimeR").toString());
 
             // 获取ID
-            String id = key.toString().split(AbstractHotSpotJob.ID_CONN)[0];
+            String id = key.toString().split(JobConst.ID_CONN)[0];
             // 获取key
-            String keyStr = key.toString().split(AbstractHotSpotJob.ID_CONN)[1];
+            String keyStr = key.toString().split(JobConst.ID_CONN)[1];
             // 获取hotspot_res_id数据苦中的points集合
             DBCollection hotspotResConnection = DBUtil.getDBCollection(DBNames.COLLECTION_RES_HOTSPOT + "_" + id, COLLECTION_NAME_POINT);
             // point对象
@@ -98,9 +99,9 @@ public class HotSpotPointOutputFormat<K, V> extends FileOutputFormat<K, V> {
             long endTimeR = Long.parseLong(vJSON.get("endTimeR").toString());
 
             // 获取ID
-            String id = key.toString().split(AbstractHotSpotJob.ID_CONN)[0];
+            String id = key.toString().split(JobConst.ID_CONN)[0];
             // 获取key
-            String keyStr = key.toString().split(AbstractHotSpotJob.ID_CONN)[1];
+            String keyStr = key.toString().split(JobConst.ID_CONN)[1];
             // 获取hotspot_res_id数据苦中的pages集合
             DBCollection hotspotResConnection = DBUtil.getDBCollection(DBNames.COLLECTION_RES_HOTSPOT + "_" + id, COLLECTION_NAME_PAGE);
             // page对象

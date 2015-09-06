@@ -1,11 +1,8 @@
 package com.nemo.test;
 
-import java.io.IOException;
-import java.util.StringTokenizer;
-
+import com.landray.behavior.base.util.HDFSUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import com.landray.behavior.util.HDFSUtil;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -13,6 +10,9 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+import java.io.IOException;
+import java.util.StringTokenizer;
 
 public class WordCount {
 	public static final String INPUT = "hdfs://master:9000/input/wordcount";

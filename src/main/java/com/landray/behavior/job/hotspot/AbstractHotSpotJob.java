@@ -1,21 +1,12 @@
 package com.landray.behavior.job.hotspot;
 
-import com.mongodb.DBCollection;
-import com.landray.behavior.db.MongoPool;
-import com.landray.behavior.util.HDFSUtil;
+import com.landray.behavior.job.base.BehaviorJob;
+import com.landray.behavior.job.base.JobConst;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.OutputFormat;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import java.io.IOException;
 
@@ -25,103 +16,10 @@ import java.io.IOException;
  * @author nemo
  *
  */
-public abstract class AbstractHotSpotJob {
-	protected static final Log LOG = LogFactory.getLog(AbstractHotSpotJob.class);
-	public static final String JOB_CATE = "hotspot";// job类型
-    public static final String ID_CONN = "----";
-	public static final String ADDRESS ="hdfs://master:9000";
-	/**
-	 * 获取下一个job
-	 * 
-	 * @return
-	 */
-	public AbstractHotSpotJob getNextJob() {
-		return null;
+public abstract class AbstractHotSpotJob extends BehaviorJob{
+	public String getJobCate() {
+		return JobConst.JOB_CATE_HOTSPOT;
 	}
-	/**
-	 * 根据日期提交当天的job
-	 * 
-	 * @param date
-	 * @return
-	 * @throws Exception
-	 */
-	public boolean run(String date) throws Exception {
-		Job job = getJob(date);
-		boolean result = job.waitForCompletion(true);
-		if (result) {
-			LOG.info("job：" + job.getJobName() + "正常退出!");
-			//提交下一个job
-			if(getNextJob() != null){
-				  getNextJob().run(date);
-			}
-		} else {
-			LOG.info("job：" + job.getJobName() + "异常退出!");
-		}
-		return result;
-	}
-
-	/**
-	 * 获取hadoop job
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-	public Job getJob(String date) throws Exception {
-		// String month = "2015-08";
-		String month = date.substring(0, date.lastIndexOf("-"));
-		String inputPath = ADDRESS+"/input/logs/" + month + "/" + JOB_CATE + "." + date + "*";
-		String outPath = ADDRESS+"/output/logs/" + date + "/" + JOB_CATE + "_" + getJobName();
-
-		Configuration conf = new Configuration();
-		Job job = Job.getInstance(conf, JOB_CATE + "_" + getJobName() + "_" + date);
-		job.setJarByClass(getJarClass());
-		job.setMapperClass(getMapperClass());
-		job.setReducerClass(getReducerClass());
-		job.setOutputFormatClass(getOutputClass());
-		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(Text.class);
-		FileInputFormat.addInputPath(job, new Path(inputPath));
-		FileOutputFormat.setOutputPath(job, new Path(outPath));
-		if (HDFSUtil.exits(conf, outPath)) {
-			System.out.println(outPath + "该路径已经存在,    先删除该目录......");
-			System.out.println("删除结果:" + HDFSUtil.deleteFile(conf, outPath));
-		}
-		return job;
-	}
-
-	/**
-	 * 获取job名 for: widget|point|page
-	 * 
-	 * @return
-	 */
-	public abstract String getJobName();
-
-	/**
-	 * 获取job的mapper class
-	 * 
-	 * @return
-	 */
-	public abstract Class<? extends Mapper> getMapperClass();
-
-	/**
-	 * 获取job的reducer class
-	 * 
-	 * @return
-	 */
-	public abstract Class<? extends Reducer> getReducerClass();
-
-	/**
-	 * 获取output format
-	 *
-	 * @return
-	 */
-	public abstract Class<? extends OutputFormat> getOutputClass();
-	/**
-	 * 
-	 * 获取jar class
-	 * @return
-	 */
-	public abstract Class<?> getJarClass();
 
 	public abstract static class HotSpotMapper extends Mapper<Object, Text, Text, Text> {
 		/**
