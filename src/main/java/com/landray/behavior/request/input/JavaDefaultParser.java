@@ -1,5 +1,6 @@
 package com.landray.behavior.request.input;
 
+
 import com.landray.behavior.base.util.StringUtil;
 
 public class JavaDefaultParser extends Parser {

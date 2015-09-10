@@ -1,13 +1,13 @@
 package com.landray.behavior.request.input;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.landray.behavior.base.name.Custom;
 import com.landray.behavior.base.util.StringUtil;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class UrlContent {
 	public Custom custom;
@@ -55,4 +55,22 @@ public class UrlContent {
 		}
 		return sb.toString();
 	}
+
+	public String toHiveMapString(){
+		StringBuffer sb = new StringBuffer();
+		String CONN = ",";
+		sb.append("server:").append(server).append(CONN);
+		sb.append("module:").append(module).append(CONN);
+		sb.append("path:").append(path).append(CONN);
+		sb.append("method:").append(method).append(CONN);
+		sb.append("query:").append(query).append(CONN);
+		sb.append("hash:").append(hash).append(CONN);
+		sb.append("portlet:").append(StringUtil.getParameter(query, "LUIID") != null).append(CONN);
+		for (Entry<String, Object> entry : extendProperty.entrySet()) {
+			sb.append(entry.getKey()+":").append(entry.getValue()).append(CONN);
+		}
+		return sb.toString().substring(0,sb.toString().length()-1);
+	}
 }
+
+

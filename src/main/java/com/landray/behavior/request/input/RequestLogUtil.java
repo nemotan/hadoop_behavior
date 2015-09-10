@@ -16,6 +16,95 @@ import java.util.List;
 public class RequestLogUtil {
     private static final Log logger = LogFactory
             .getLog(RequestLogUtil.class);
+
+    /*
+       hive分隔符
+     */
+    private static final String TERMINATED = "\t";
+
+    /**
+     * 把日志解析成字符串，意导入到hive中
+     *
+     * @param line
+     * @return
+     */
+    public static String getLogStrHIVE(String line) {
+        StringBuffer hiveLine = new StringBuffer();
+
+        //url错误列表
+        List<String> errorList = new ArrayList<String>();
+
+        JSONObject lineJson = JSONObject.fromObject(line);
+        String id = lineJson.get("id").toString();// 客户id
+        String flleName = lineJson.getString("fileName").toString();// 文件名
+        String log = lineJson.getString("value");// 日志内容
+
+        //根据ID获取custom信息
+        Custom custom = CustomManager.getCustom(id);
+
+        String nodeName = getNodeName(flleName);
+        String[] info = log.split("\t");
+
+        String type = formatContentType(info[9]);
+        //对应hive中map类型 for: job:80,team:60,person:70
+        String urlMapStr = "";
+        String refMapStr = "";
+        // URL
+        UrlContent urlContent = formatUrl(info[10], custom, errorList);
+        if (urlContent == null) {
+            return null;
+        } else {
+            /*doc.put("url", url.toDBObject());
+            if (url.contentType != null) {
+                doc.put("type", url.contentType);
+            }*/
+            type = urlContent.contentType;
+            urlMapStr = urlContent.toHiveMapString();
+        }
+        // REF
+        urlContent = formatUrl(info[11], custom, errorList);
+        if (urlContent != null) {
+            refMapStr = urlContent.toHiveMapString();
+        }
+
+        //打印解析出错的url
+        if (logger.isDebugEnabled() && !errorList.isEmpty()) {
+            StringBuffer sb = new StringBuffer("无法解释的URL：");
+            for (String err : errorList) {
+                sb.append("\r\n").append(err);
+            }
+            logger.debug(sb);
+        }
+
+        long dt = Long.valueOf(info[12]);
+        hiveLine.append(System.currentTimeMillis()).append(TERMINATED);//create
+        hiveLine.append(nodeName).append(TERMINATED);//node
+        hiveLine.append(info[1]).append(TERMINATED);//session
+        hiveLine.append(Long.valueOf(info[2]) - dt).append(TERMINATED);//time
+        hiveLine.append(info[3]).append(TERMINATED);//ip
+        hiveLine.append(info[4]).append(TERMINATED);//user
+        hiveLine.append(decodeUser(info[5])).append(TERMINATED);//name
+        hiveLine.append(Integer.valueOf(info[6])).append(TERMINATED);//ua
+        hiveLine.append(info[7]).append(TERMINATED);//browser
+        hiveLine.append(info[8]).append(TERMINATED);//browserVer
+        hiveLine.append(formatContentType(info[9])).append(TERMINATED);//type
+        hiveLine.append(dt).append(TERMINATED);//dt
+        hiveLine.append(urlMapStr).append(TERMINATED);//url
+        hiveLine.append(refMapStr).append(TERMINATED);//ref
+
+        //打印解析出错的url
+        if (logger.isDebugEnabled() && !errorList.isEmpty()) {
+            StringBuffer sb = new StringBuffer("无法解释的URL：");
+            for (String err : errorList) {
+                sb.append("\r\n").append(err);
+            }
+            logger.debug(sb);
+        }
+
+        return hiveLine.toString();
+    }
+
+
     /**
      * 把日志解析成JSON格式
      *

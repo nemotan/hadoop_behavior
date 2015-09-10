@@ -1,7 +1,7 @@
 package com.landray.behavior.job.base;
 
-import com.landray.behavior.job.hotspot.AbstractHotSpotJob;
 import com.landray.behavior.base.util.HDFSUtil;
+import com.landray.behavior.job.hotspot.AbstractHotSpotJob;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -79,6 +79,9 @@ public abstract class BehaviorJob {
         return job;
     }
 
+    public abstract static class BehaviorMapper extends Mapper<Object, Text, Text, Text> {}
+
+    public abstract static class BehaviorReducer extends Reducer<Text, Text, Text, Text> {}
     /**
      * 获取job的种类 for： hotspot|request
      *

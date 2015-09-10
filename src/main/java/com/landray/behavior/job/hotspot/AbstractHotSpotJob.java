@@ -5,8 +5,6 @@ import com.landray.behavior.job.base.JobConst;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
 
@@ -21,7 +19,7 @@ public abstract class AbstractHotSpotJob extends BehaviorJob{
 		return JobConst.JOB_CATE_HOTSPOT;
 	}
 
-	public abstract static class HotSpotMapper extends Mapper<Object, Text, Text, Text> {
+	public abstract static class HotSpotMapper extends BehaviorMapper{
 		/**
 		 * 明细日志map方法
 		 * 
@@ -59,6 +57,6 @@ public abstract class AbstractHotSpotJob extends BehaviorJob{
 		}
 	}
 
-	public abstract static class HotSpotReduce extends Reducer<Text, Text, Text, Text> {
+	public abstract static class HotSpotReduce extends BehaviorReducer{
 	}
 }
