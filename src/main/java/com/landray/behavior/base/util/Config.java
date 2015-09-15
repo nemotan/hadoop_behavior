@@ -1,4 +1,4 @@
-package com.landray.behavior.base.db;
+package com.landray.behavior.base.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

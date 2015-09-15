@@ -1,15 +1,15 @@
 package com.landray.behavior.base.db;
 
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import com.landray.behavior.base.util.Config;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.Date;
+import java.util.List;
 
 public class MongoPool {
 	private static final Log logger = LogFactory.getLog(MongoPool.class);

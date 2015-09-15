@@ -77,6 +77,10 @@ public class RequestLogUtil {
         }
 
         long dt = Long.valueOf(info[12]);
+
+        hiveLine.append(id).append(TERMINATED);//日志customerId
+        hiveLine.append(flleName.split("\\.")[2]).append(TERMINATED);//日志fileDate
+
         hiveLine.append(System.currentTimeMillis()).append(TERMINATED);//create
         hiveLine.append(nodeName).append(TERMINATED);//node
         hiveLine.append(info[1]).append(TERMINATED);//session
