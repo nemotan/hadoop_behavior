@@ -24,6 +24,7 @@ public class MongoPool {
 
 	private MongoPool() {
 		try {
+
 			String host = Config.getProperty("mongo.host");
 			String port = Config.getProperty("mongo.port");
 			if (port == null) {
