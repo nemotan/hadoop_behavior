@@ -60,7 +60,7 @@ public abstract class BehaviorJob {
         // String month = "2015-08";
         String month = date.substring(0, date.lastIndexOf("-"));
         String inputPath = JobConst.ADDRESS+"/input/logs/" + month + "/" + getJobCate() + "." + date + "*";
-        String outPath = JobConst.ADDRESS+"/output/logs/" + date + "/" + getJobCate() + "_" + getJobName();
+        String outPath = JobConst.ADDRESS+"/output/logs/"+getJobCate()+"_"+getJobName() +"/"+ month + "/" + date;
 
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, getJobCate() + "_" + getJobName() + "_" + date);
@@ -79,9 +79,9 @@ public abstract class BehaviorJob {
         return job;
     }
 
-    public abstract static class BehaviorMapper extends Mapper<Object, Text, Text, Text> {}
+    public static class BehaviorMapper extends Mapper<Object, Text, Text, Text> {}
 
-    public abstract static class BehaviorReducer extends Reducer<Text, Text, Text, Text> {}
+    public static class BehaviorReducer extends Reducer<Text, Text, Text, Text> {}
     /**
      * 获取job的种类 for： hotspot|request
      *

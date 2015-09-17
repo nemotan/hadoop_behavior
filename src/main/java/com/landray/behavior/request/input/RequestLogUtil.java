@@ -20,9 +20,8 @@ public class RequestLogUtil {
     /*
        hive分隔符
      */
-    private static final String TERMINATED = "\t";
-
-    /**
+    private static final String TERMINATED = "\t";//hive 分隔符
+    /**i
      * 把日志解析成字符串，意导入到hive中
      *
      * @param line
@@ -78,23 +77,24 @@ public class RequestLogUtil {
 
         long dt = Long.valueOf(info[12]);
 
-        hiveLine.append(id).append(TERMINATED);//日志customerId
-        hiveLine.append(flleName.split("\\.")[2]).append(TERMINATED);//日志fileDate
+        String fileDate = flleName.split("\\.")[2];
+        hiveLine.append(fileDate).append(TERMINATED);//日志fileDate string
+        hiveLine.append(id).append(TERMINATED);//日志customerId string
 
-        hiveLine.append(System.currentTimeMillis()).append(TERMINATED);//create
-        hiveLine.append(nodeName).append(TERMINATED);//node
-        hiveLine.append(info[1]).append(TERMINATED);//session
-        hiveLine.append(Long.valueOf(info[2]) - dt).append(TERMINATED);//time
-        hiveLine.append(info[3]).append(TERMINATED);//ip
-        hiveLine.append(info[4]).append(TERMINATED);//user
-        hiveLine.append(decodeUser(info[5])).append(TERMINATED);//name
-        hiveLine.append(Integer.valueOf(info[6])).append(TERMINATED);//ua
-        hiveLine.append(info[7]).append(TERMINATED);//browser
-        hiveLine.append(info[8]).append(TERMINATED);//browserVer
-        hiveLine.append(formatContentType(info[9])).append(TERMINATED);//type
-        hiveLine.append(dt).append(TERMINATED);//dt
-        hiveLine.append(urlMapStr).append(TERMINATED);//url
-        hiveLine.append(refMapStr).append(TERMINATED);//ref
+        hiveLine.append(System.currentTimeMillis()).append(TERMINATED);//create BIGINT
+        hiveLine.append(nodeName).append(TERMINATED);//node string
+        hiveLine.append(info[1]).append(TERMINATED);//session string
+        hiveLine.append(Long.valueOf(info[2]) - dt).append(TERMINATED);//time BIGINT
+        hiveLine.append(info[3]).append(TERMINATED);//ip string
+        hiveLine.append(info[4]).append(TERMINATED);//user string
+        hiveLine.append(decodeUser(info[5])).append(TERMINATED);//name string
+        hiveLine.append(Integer.valueOf(info[6])).append(TERMINATED);//ua int
+        hiveLine.append(info[7]).append(TERMINATED);//browser string
+        hiveLine.append(info[8]).append(TERMINATED);//browserVER string
+        hiveLine.append(formatContentType(info[9])).append(TERMINATED);//type string
+        hiveLine.append(dt).append(TERMINATED);//dt BIGINT
+        hiveLine.append(urlMapStr).append(TERMINATED);//url map
+        hiveLine.append(refMapStr).append(TERMINATED);//ref map
 
         //打印解析出错的url
         if (logger.isDebugEnabled() && !errorList.isEmpty()) {

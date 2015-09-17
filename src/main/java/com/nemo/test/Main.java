@@ -26,9 +26,10 @@ public class Main {
 
 		public void map(Object key, Text value, Context context)
 				throws IOException, InterruptedException {
-			StringTokenizer itr = new StringTokenizer(value.toString());
-			while (itr.hasMoreTokens()) {
-				word.set(itr.nextToken());
+			String line = value.toString();
+			String[] lineArr = line.split(" ");
+			for(String s: lineArr) {
+				word.set(s);
 				context.write(word, one);
 			}
 		}
@@ -55,7 +56,7 @@ public static void main(String[] args) throws IOException, ClassNotFoundExceptio
 	conf.set("mapreduce.jobhistory.address", "master:10020");
 	Job job = Job.getInstance(conf, "word count");
 	job.setJar("/Users/nemo/03ws/sp_intel/out/artifacts/hadoop_behavior_jar/hadoop_behavior.jar");
-	job.setMapperClass(TokenizerMapper.class);
+	//job.setMapperClass(TokenizerMapper.class);
 	FileInputFormat.addInputPath(job, new Path(INPUT));
 	FileOutputFormat.setOutputPath(job, new Path(OUT_PUT));
 	if (HDFSUtil.exits(conf, OUT_PUT)) {
